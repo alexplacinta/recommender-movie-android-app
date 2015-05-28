@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Mov-Rec</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="recommend">Recommend</string>
+    <string name="view_movies">Recommended movies</string>
+    <string name="title_app">Movie-recommender</string>
+    <string name="movie">movie name</string>
+    <string name="comment">comment this movie</string>
+    <string name="title_activity_display_movies">DisplayMoviesActivity</string>
+    <string-array name="list">
+        <item>Item 1</item>
+        <item>Item 2</item>
+        <item>Item 3</item>
+        <item>Item 4</item>
+        <item>Item 5</item>
+    </string-array>
+</resources>
