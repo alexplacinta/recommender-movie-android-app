@@ -16,6 +16,8 @@
         android:background="#02000000"
         android:divider="#ffc3b7b2"
         android:dividerHeight="2dp"
-        android:clickable="false" />
+        android:clickable="false"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true" />
 
 </RelativeLayout>

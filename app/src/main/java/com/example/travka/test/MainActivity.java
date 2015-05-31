@@ -187,11 +187,9 @@ public class MainActivity extends Activity {
 
         @Override
         protected String doInBackground(String... params) {
-            InputStream inputStream = null;
-            HttpURLConnection urlConnection = null;
             String result = "";
             try {
-                urlConnection = (HttpURLConnection)new URL(url+"recommendedmovies").openConnection();
+                HttpURLConnection urlConnection = (HttpURLConnection)new URL(url+"recommendedmovies").openConnection();
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestMethod("GET");
 
