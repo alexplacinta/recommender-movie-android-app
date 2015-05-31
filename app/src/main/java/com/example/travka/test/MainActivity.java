@@ -12,11 +12,20 @@ import android.view.View;
 import android.widget.Button;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+
 import android.os.AsyncTask;
 import android.widget.TextView;
+
+import org.json.JSONObject;
 
 
 public class MainActivity extends Activity {
@@ -106,36 +115,41 @@ public class MainActivity extends Activity {
 
         @Override
         protected String doInBackground(String... params) {
-            InputStream inputStream = null;
-            HttpURLConnection urlConnection = null;
+
             String result = "";
             try {
 
-                URL Url = new URL(url+"recommendedmovies");
-                urlConnection = (HttpURLConnection) Url.openConnection();
-
-                urlConnection.setRequestProperty("Content-Type", "text/plain; charset=utf-8");
-                urlConnection.setRequestProperty("Accept", "text/plain; charset=utf-8");
-                urlConnection.setRequestProperty("movie", params[0]);
-                urlConnection.setRequestProperty("comment", params[1]);
-
+                HttpURLConnection urlConnection = (HttpURLConnection)new URL(url+"recommendedmovies").openConnection();
 
                 urlConnection.setRequestMethod("POST");
-                int statusCode = urlConnection.getResponseCode();
+                urlConnection.setRequestProperty("Content-Type", "application/json");
 
-                if (statusCode ==  200) {
-                    inputStream = new BufferedInputStream(urlConnection.getInputStream());
-                    byte[] contents = new byte[20000];
+                //data to post
+                JSONObject jsonParam = new JSONObject();
+                jsonParam.put("movie", params[0]);
+                jsonParam.put("comment", params[1]);
 
-                    int bytesRead=0;
+                // Send POST output.
+                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream()));
+                out.write(jsonParam.toString());
+                out.close();
+
+
+                int code = urlConnection.getResponseCode();
+                if (code ==  200) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    String line;
                     String response = "";
-                    while( (bytesRead = inputStream.read(contents)) != -1){
-                        response = new String(contents, 0, bytesRead);
-                    }
+                    while ((line = in.readLine()) != null){
+                        response += line;
+                    };
+                    in.close();
                     result = response;
+                    urlConnection.disconnect();
                 }else{
 
                     result = "fail";
+                    Log.d("code", Integer.toString(code));
                 }
             } catch (Exception e) {
                 Log.d("error", e.getLocalizedMessage());
@@ -177,27 +191,24 @@ public class MainActivity extends Activity {
             HttpURLConnection urlConnection = null;
             String result = "";
             try {
-
-                URL Url = new URL(url+"recommendedmovies");
-                urlConnection = (HttpURLConnection) Url.openConnection();
-
-                urlConnection.setRequestProperty("Content-Type", "text/plain; charset=utf-8");
-                urlConnection.setRequestProperty("Accept", "text/plain; charset=utf-8");
-
-
+                urlConnection = (HttpURLConnection)new URL(url+"recommendedmovies").openConnection();
+                urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestMethod("GET");
+
+
                 int statusCode = urlConnection.getResponseCode();
 
                 if (statusCode ==  200) {
-                    inputStream = new BufferedInputStream(urlConnection.getInputStream());
-                    byte[] contents = new byte[500000];
-
-                    int bytesRead=0;
+                    BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    String line;
                     String response = "";
-                    while( (bytesRead = inputStream.read(contents)) != -1){
-                        response = new String(contents, 0, bytesRead);
-                    }
+                    while ((line = in.readLine()) != null){
+                        response += line;
+                    };
+                    in.close();
                     result = response;
+
+                    urlConnection.disconnect();
                 }else{
                     result = "fail";
                 }
